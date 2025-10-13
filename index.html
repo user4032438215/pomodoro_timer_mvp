@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pomodoro timer MVP</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <h1>POMODORO TIMER</h1>
+
+  <div id="timer-container">00:00</div>
+
+  <button onclick="startTimer(1500)">▶ 25分タイマー</button>
+  <button onclick="startTimer(300)">☕ 5分休憩</button>
+  <button onclick="startTimer(900)">🌿 15分休憩</button>
+  <button onclick="pauseTimer()">⏸ STOP</button>
+  <button onclick="resumeTimer()">▶ 再スタート</button>
+
+  <div id="work-icons"></div> <!-- 🔥を表示する場所 -->
+
+  <script src="js/timer.js"></script>
+</body>
+
+</html>
