@@ -1,13 +1,32 @@
 let seconds = 0;
 let timerId = null;
+workSessionType = ''; // 現在のセッションタイプを追跡する変数.. 'work', 'break', 'longbreak'のいずれか
+let workSessionCount = 0; // 作業セッションのカウント
+
+//現在のセッションタイプをHTML上に表示する関数
+function getCurrentSessionType(){
+  const status = document.getElementById("session-status");
+
+  if (workSessionType === 'work') {
+    status.textContent = "作業中";
+  } else if (workSessionType === 'break') {
+    status.textContent = "休憩中";
+  } else if (workSessionType === 'longbreak') {
+    status.textContent = "長めの休憩中";
+  } else {
+    status.textContent = "";
+  }
+}
+
 
 
 // タイマーをスタートする関数
-function startTimer(duration) { // onclick="startTimer(1500)" の1500がdurationに入る
+function startTimer(duration, type) { // onclick="startTimer(1500)" の1500がdurationに入る
   clearInterval(timerId); // 前のタイマーをリセット
   seconds = duration; // 25分、5分、15分の秒数を代入
+  workSessionType = type; // 現在のセッションタイプを設定
   showTime(); // 残り時間MM:SSを画面に表示する関数
-
+  getCurrentSessionType(type); // 現在のセッションタイプをHTML上に表示する関数
   timerId = setInterval(countDown, 1000); // 1秒ごとにcountDown関数を実行だけど正直よくわからんなんで代入しないといけないのか
 }
 
@@ -17,6 +36,13 @@ function countDown() {
 
   if (seconds < 0) {
     clearInterval(timerId);
+
+    // 作業セッションが終了した場合、カウントを増やして🔥アイコンを更新
+    if (workSessionType === 'work') {
+      workSessionCount++;
+      addWorkIcon();
+    }
+
     alert("タイマー終了！");
     return;
   }
@@ -44,6 +70,26 @@ function showTime() {
   const formatted = `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   document.getElementById("timer-container").textContent = formatted;
   console.log(seconds); // 挙動確認用
+}
+
+//🔥アイコンを追加していく関数
+function addWorkIcon() {
+  const container = document.getElementById("work-icons");
+  container.textContent = ""; // 一応中身をカラにしておく
+  console.log(workSessionCount); // 挙動確認用
+
+  for (let i = 0; i < workSessionCount; i++) {
+    const icon = document.createElement("span"); // span要素を作成
+    icon.textContent = "🔥"; // アイコンを設定
+    icon.classList.add("work-icon"); // クラスを追加（必要に応じてスタイルを適用するため）
+    container.appendChild(icon); // コンテナに追加
+    console.log("🔥"); // 挙動確認用
+
+    // 3回の作業セッションごとに改行を追加
+    if ((i + 1) % 3 === 0) {
+      container.appendChild(document.createElement("br"));
+    }
+  }
 }
 
 

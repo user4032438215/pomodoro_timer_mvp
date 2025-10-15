@@ -12,11 +12,13 @@
 
   <h1>POMODORO TIMER</h1>
 
+  <output id="session-status"></output><!-- 現在のセッションタイプを表示する場所 -->
+
   <div id="timer-container">00:00</div>
 
-  <button onclick="startTimer(1500)">▶ 25分タイマー</button>
-  <button onclick="startTimer(300)">☕ 5分休憩</button>
-  <button onclick="startTimer(900)">🌿 15分休憩</button>
+  <button onclick="startTimer(1500, 'work')">▶ 25分タイマー</button>
+  <button onclick="startTimer(300, 'break')">☕ 5分休憩</button>
+  <button onclick="startTimer(900, 'longbreak')">🌿 15分休憩</button>
   <button onclick="pauseTimer()">⏸ STOP</button>
   <button onclick="resumeTimer()">▶ 再スタート</button>
 
