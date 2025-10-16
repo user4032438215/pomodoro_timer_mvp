@@ -1,24 +1,27 @@
-let seconds = 0;
-let timerId = null;
-workSessionType = ''; // 現在のセッションタイプを追跡する変数.. 'work', 'break', 'longbreak'のいずれか
+let seconds = 0; // タイマーの秒数を格納する変数の初期化 
+let timerId = null; // タイマーIDを格納する変数の初期化
+let workSessionType = ''; // 現在のセッションタイプを追跡する変数.. 'full', 'break', 'longbreak', 'mini', 'extended' のいずれか
 let workSessionCount = 0; // 作業セッションのカウント
+let isMiniSessionCompleted = false; // 5分セッションが終わったかどうかのフラグ
 
 //現在のセッションタイプをHTML上に表示する関数
-function getCurrentSessionType(){
+function getCurrentSessionType() {
   const status = document.getElementById("session-status");
 
-  if (workSessionType === 'work') {
-    status.textContent = "作業中";
+  if (workSessionType === 'full') {
+    status.textContent = "💼 作業中";
   } else if (workSessionType === 'break') {
-    status.textContent = "休憩中";
+    status.textContent = "☕ 休憩中";
   } else if (workSessionType === 'longbreak') {
-    status.textContent = "長めの休憩中";
+    status.textContent = "🌿 長めの休憩中";
+  } else if (workSessionType === 'mini') {
+    status.textContent = "🕔 5分だけ頑張る！";
+  } else if (workSessionType === 'extended') {
+    status.textContent = "🚀 調子づいてきた！あと20分！";
   } else {
     status.textContent = "";
   }
 }
-
-
 
 // タイマーをスタートする関数
 function startTimer(duration, type) { // onclick="startTimer(1500)" の1500がdurationに入る
@@ -30,25 +33,61 @@ function startTimer(duration, type) { // onclick="startTimer(1500)" の1500がdu
   timerId = setInterval(countDown, 1000); // 1秒ごとにcountDown関数を実行だけど正直よくわからんなんで代入しないといけないのか
 }
 
-// 1秒ごとにカウントダウンされる関数
+// 1秒ごとにカウントダウンする関数（セッションタイプの状態管理とアイコンカウントとか本来分けるべき処理が混ざってる。。たぶんよくない）
 function countDown() {
   seconds--;
 
   if (seconds < 0) {
     clearInterval(timerId);
 
-    // 作業セッションが終了した場合、カウントを増やして🔥アイコンを更新
-    if (workSessionType === 'work') {
-      workSessionCount++;
-      addWorkIcon();
-    }
 
     alert("タイマー終了！");
+
+    if (workSessionType === 'mini') {
+      handleMiniSessionEnd(); // 5分ミニセッションが終了した場合にポップアップを表示する関数
+    } else if (workSessionType === 'extended') {
+      workSessionCount++;
+      addWorkIcon(); // 作業セッションが終了した場合、カウントを増やして🔥アイコンを更新する関数
+    } else if (workSessionType === 'full') {
+      workSessionCount++;
+      addWorkIcon(); // 作業セッションが終了した場合、カウントを増やして🔥アイコンを更新する関数
+    }
+
     return;
   }
 
-  showTime();
+  showTime(); 
 }
+
+
+//5分ミニセッションが終了した場合にポップアップを表示する関数
+// function handleMiniSessionEnd() {
+//   if (workSessionType === 'mini' && seconds < 0) {
+//     isMiniSessionCompleted = true; // フラグをtrueに設定
+//     showPopup();
+//   }
+// }
+//5分ミニセッションが終了した場合にポップアップを表示する関数（seconds < 0の条件は厳しすぎて動作しなかった）
+function handleMiniSessionEnd() {
+  if (workSessionType === 'mini') {
+    isMiniSessionCompleted = true; // フラグをtrueに設定
+    showPopup();
+  }
+}
+
+//ポップアップを表示する関数
+function showPopup() {
+  document.getElementById("popup").showModal();
+}
+
+//ポップアップを閉じる関数
+function closePopup(actionType) {
+  if (actionType === 'end') {
+    alert("おつかれさまでした！");
+  }
+  document.getElementById("popup").close();
+}
+
 
 // タイマーをストップする関数
 function pauseTimer() {
@@ -72,6 +111,14 @@ function showTime() {
   console.log(seconds); // 挙動確認用
 }
 
+//作業セッションが終了した場合、カウントを増やして🔥アイコンを更新する関数
+// function handleWorkSessionEnd() {
+//   if (workSessionType === 'work') {
+//     workSessionCount++;
+//     addWorkIcon();
+//   }
+// }
+
 //🔥アイコンを追加していく関数
 function addWorkIcon() {
   const container = document.getElementById("work-icons");
@@ -91,55 +138,3 @@ function addWorkIcon() {
     }
   }
 }
-
-
-
-
-
-// let seconds = 1500; // 25分を秒に変換
-
-// function countDown() {
-//   seconds--;
-//   if (seconds < 0) {
-//     clearInterval(timerId);
-//     alert("25分経過しました。休憩しましょう！");
-//     return;
-//   }
-//   console.log(seconds);
-// }
-
-// setInterval(countDown, 1000);
-
-
-// let seconds = 300; // 5分を秒に変換
-
-// function countDown() {
-//   seconds--;
-//   if (seconds < 0) {
-//     clearInterval(timerId);
-//     alert("5分経過しました。作業に戻りましょう！");
-//     return;
-//   }
-//   console.log(seconds);
-// }
-
-// setInterval(countDown, 1000);
-
-// let seconds = 900; // 25分を秒に変換
-
-// function countDown() {
-//   seconds--;
-//   if (seconds < 0) {
-//     clearInterval(timerId);
-//     alert("15分経過しました。作業に戻りましょう！");
-//     return;
-//   }
-//   console.log(seconds);
-// }
-
-// setInterval(countDown, 1000);
-
-
-
-
-// document.getElementById("timer-container").textContent = seconds;

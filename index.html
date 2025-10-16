@@ -16,11 +16,20 @@
 
   <div id="timer-container">00:00</div>
 
-  <button onclick="startTimer(1500, 'work')">▶ 25分タイマー</button>
+  <button onclick="startTimer(300, 'mini')">とりあえず5分だけ頑張る</button>
+  <button onclick="startTimer(1500, 'full')">▶ 25分タイマー</button>
   <button onclick="startTimer(300, 'break')">☕ 5分休憩</button>
   <button onclick="startTimer(900, 'longbreak')">🌿 15分休憩</button>
   <button onclick="pauseTimer()">⏸ STOP</button>
   <button onclick="resumeTimer()">▶ 再スタート</button>
+
+  <dialog id="popup">
+    <p>🎉 おつかれさまです！5分完了！</p>
+    <p>この調子であと20分やってみる？</p>
+    <button onclick="startTimer(1200, 'extended'); closePopup()">▶ 20分追加する</button>
+    <button onclick="closePopup('end')">今日はここまで</button>
+  </dialog>
+
 
   <div id="work-icons"></div> <!-- 🔥を表示する場所 -->
 
