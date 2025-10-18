@@ -24,7 +24,7 @@ function getCurrentSessionType() {
 }
 
 // タイマーをスタートする関数
-function startTimer(duration, type) { // onclick="startTimer(1500)" の1500がdurationに入る
+function startTimer(duration, type) { // onclick="startTimer(10, 'full')"の1500がdurationに入る。'full'がtypeに入る
   clearInterval(timerId); // 前のタイマーをリセット
   seconds = duration; // 25分、5分、15分の秒数を代入
   workSessionType = type; // 現在のセッションタイプを設定
@@ -45,6 +45,7 @@ function countDown() {
 
     alert("タイマー終了！");
 
+    //セッションタイプに応じた処理
     if (workSessionType === 'mini') {
       handleMiniSessionEnd(); // 5分ミニセッションが終了した場合にポップアップを表示する関数
     } else if (workSessionType === 'extended') {
@@ -55,12 +56,33 @@ function countDown() {
       addWorkIcon(); // 作業セッションが終了した場合、カウントを増やして🔥アイコンを更新する関数
     }
 
+    //セッション終了後セッション数に応じての自動的に休憩カウントダウンを進める
+    if (workSessionType === 'full' || workSessionType === 'extended') {
+      if (workSessionCount % 3 === 0 && workSessionCount !== 0) {
+        // 15分の長めの休憩セッションを開始
+        // startTimer(900, 'longbreak'); 
+        startTimer(5, 'longbreak');
+      } else {
+        // 5分の休憩セッションを開始
+        // startTimer(300, 'break');
+        startTimer(5, 'break');
+      }
+    } else if (workSessionType === 'break' || workSessionType === 'longbreak') {
+      // 休憩セッション終了後に25分の作業セッションを開始
+      // startTimer(1500, 'full');
+      startTimer(5, 'full');
+    }
+
+    closeMiniSession(); //mini-sesionを非表示にする関数
+
+    console.log(workSessionCount); // 挙動確認用
+    console.log(workSessionType); // 挙動確認用
+
     return;
   }
 
   showTime();
 }
-
 
 //5分ミニセッションが終了した場合にポップアップを表示する関数
 // function handleMiniSessionEnd() {
@@ -88,8 +110,22 @@ function closePopup(actionType) {
     alert("おつかれさまでした！");
   }
   document.getElementById("popup").close();
+
+  // //セッション終了後セッション数に応じての自動的に休憩カウントダウンを進める
+  // if (workSessionCount % 3 === 0 && workSessionCount !== 0) {
+  //   startTimer(900, 'longbreak'); // 15分の長めの休憩セッションを開始
+  // } else {
+  //   startTimer(300, 'break'); // 5分の休憩セッションを開始
+  // }
 }
 
+//mini-sesionを非表示にする関数
+function closeMiniSession() {
+  const element = document.getElementById("mini-session");
+  if (element) {
+    element.style.display = "none";
+  }
+}
 
 // タイマーをストップする関数
 function pauseTimer() {
@@ -112,14 +148,6 @@ function showTime() {
   document.getElementById("timer-container").textContent = formatted;
   console.log(seconds); // 挙動確認用
 }
-
-//作業セッションが終了した場合、カウントを増やして🔥アイコンを更新する関数
-// function handleWorkSessionEnd() {
-//   if (workSessionType === 'work') {
-//     workSessionCount++;
-//     addWorkIcon();
-//   }
-// }
 
 //🔥アイコンを追加していく関数
 function addWorkIcon() {
