@@ -16,17 +16,30 @@
 
   <div id="timer-container">00:00</div>
 
-  <button onclick="startTimer(300, 'mini')">とりあえず5分だけ頑張る</button>
-  <button onclick="startTimer(1500, 'full')">▶ 25分タイマー</button>
-  <button onclick="startTimer(300, 'break')">☕ 5分休憩</button>
-  <button onclick="startTimer(900, 'longbreak')">🌿 15分休憩</button>
-  <button onclick="pauseTimer()">⏸ STOP</button>
-  <button onclick="resumeTimer()">▶ 再スタート</button>
+  <div id="button-container">
+    <div class="primary-buttons">
+      <!-- <button onclick="startTimer(300, 'mini')">とりあえず5分だけ頑張る</button>
+      <button onclick="startTimer(1500, 'full')">▶ 25分タイマー</button>
+      <button onclick="startTimer(300, 'break')">☕ 5分休憩</button>
+      <button onclick="startTimer(900, 'longbreak')">🌿 15分休憩</button> -->
+      <button onclick="startTimer(5, 'mini')">とりあえず5分だけ頑張る</button>
+      <button onclick="startTimer(5, 'full')">▶ 25分タイマー</button>
+      <button onclick="startTimer(5, 'break')">☕ 5分休憩</button>
+      <button onclick="startTimer(5, 'longbreak')">🌿 15分休憩</button>
+    </div>
+
+    <div class="control-buttons">
+      <button onclick="pauseTimer()">⏸ STOP</button>
+      <button onclick="resumeTimer()">▶ 再スタート</button>
+    </div>
+  </div>
+
 
   <dialog id="popup">
     <p>🎉 おつかれさまです！5分完了！</p>
     <p>この調子であと20分やってみる？</p>
-    <button onclick="startTimer(1200, 'extended'); closePopup()">▶ 20分追加する</button>
+    <!-- <button onclick="startTimer(1200, 'extended'); closePopup()">▶ 20分追加する</button> -->
+    <button onclick="startTimer(5, 'extended'); closePopup()">▶ 20分追加する</button>
     <button onclick="closePopup('end')">今日はここまで</button>
   </dialog>
 

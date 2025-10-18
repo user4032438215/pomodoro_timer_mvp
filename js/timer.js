@@ -30,6 +30,7 @@ function startTimer(duration, type) { // onclick="startTimer(1500)" の1500がdu
   workSessionType = type; // 現在のセッションタイプを設定
   showTime(); // 残り時間MM:SSを画面に表示する関数
   getCurrentSessionType(type); // 現在のセッションタイプをHTML上に表示する関数
+  disablePrimaryButtons(); // 全てのプライマリーボタンを無効化する関数
   timerId = setInterval(countDown, 1000); // 1秒ごとにcountDown関数を実行だけど正直よくわからんなんで代入しないといけないのか
 }
 
@@ -40,6 +41,7 @@ function countDown() {
   if (seconds < 0) {
     clearInterval(timerId);
 
+    enablePrimaryButtons(); // 全てのプライマリーボタンを有効化する関数
 
     alert("タイマー終了！");
 
@@ -56,7 +58,7 @@ function countDown() {
     return;
   }
 
-  showTime(); 
+  showTime();
 }
 
 
@@ -136,5 +138,22 @@ function addWorkIcon() {
     if ((i + 1) % 3 === 0) {
       container.appendChild(document.createElement("br"));
     }
+  }
+}
+
+// 全てのプライマリーボタンを無効化する関数
+// document.querySelectorAll(".primary-buttons button").forEach(btn => btn.disabled = true);
+function disablePrimaryButtons() {
+  let buttons = document.querySelectorAll(".primary-buttons button");
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = true;
+  }
+}
+
+// 全てのプライマリーボタンを有効化する関数
+function enablePrimaryButtons() {
+  let buttons = document.querySelectorAll(".primary-buttons button");
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = false;
   }
 }
