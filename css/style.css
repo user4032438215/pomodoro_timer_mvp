@@ -12,7 +12,7 @@ body {
   background-color: #f5f5f5;
 }
 
-#session-status {
+#sessionStatus {
   display: block;
   min-height: 1.5em;
   /* 1行分の高さを確保 */
@@ -20,14 +20,14 @@ body {
   margin-bottom: 12px;
 }
 
-#timer-container {
+#timerContainer {
   font-size: 64px;
   font-weight: bold;
   margin-bottom: 30px;
   color: #333;
 }
 
-#button-container {
+#buttonContainer {
   display: flex;
   /* displayプロパティの flexって値は flex-directionっていう
   別のプロパティとセットで使うことによって意味が決まる。
@@ -48,12 +48,12 @@ button {
   border: none;
 }
 
-.primary-buttons button {
+.primary-btns button {
   font-size: var(--font-main);
   padding: 12px 24px;
 }
 
-.control-buttons button {
+.control-btn {
   font-size: var(--font-small);
   padding: 8px 16px;
   opacity: 0.6;
@@ -78,7 +78,7 @@ button {
 
 
 /* 20分ボタン：強調 */
-.highlight-button {
+.highlight-btn {
   font-size: var(--font-main);
   margin: 20px;
   background-color: #ff4d4d;
@@ -89,13 +89,13 @@ button {
   /* スムーズな変化 */
 }
 
-.highlight-button:hover {
+.highlight-btn:hover {
   animation: pulse 1.2s ease-in-out infinite;
 }
 
 
 /* 穏やかなホバー反応 */
-.neutral-button {
+.neutral-btn {
   font-size: var(--font-main);
   margin: 20px;
   background-color: #e0e0e0;
@@ -104,7 +104,7 @@ button {
   transition: background-color 0.4s ease, transform 0.4s ease;
 }
 
-.neutral-button:hover {
+.neutral-btn:hover {
   transform: scale(1.02);
   background-color: #d5d5d5;
 }
@@ -138,14 +138,15 @@ dialog::backdrop {
   justify-content: center;
 }
 
-.dialogButton {
- margin-top: 20px;
+.dialog-btn {
+  margin-top: 20px;
 }
 
 /* レスポンシブ対応 */
 @media (max-width: 480px) {
+
   /* スマホサイズ */
-  #button-container {
+  #buttonContainer {
     padding: 8px;
     gap: 8px;
   }
@@ -155,7 +156,34 @@ dialog::backdrop {
     font-size: var(--font-neutral);
   }
 
-  #timer-container {
+  #timerContainer {
     font-size: 48px;
   }
+
+  dialog {
+    min-width: auto;
+    width: 90%;
+    padding: 16px;
+    font-size: var(--font-neutral);
+  }
+
+  .dialog-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .highlight-btn,
+  .neutral-btn {
+    width: 100%;
+    font-size: var(--font-neutral);
+    margin: 0;
+  }
+
+  #sessionStatus {
+    text-align: center;
+    font-weight: bold;
+  }
+
 }
