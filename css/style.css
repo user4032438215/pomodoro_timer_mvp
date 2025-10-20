@@ -3,13 +3,50 @@
   --font-main: 18px;
   --font-small: 14px;
   --font-neutral: 16px;
+
+  /* color-palette-likemodernapp */
+  /* base-color */
+  --hue-primary: 220;
+  --saturation-base: 15%;
+  --lightness-base: 15%;
+
+  --color-bg: hsl(var(--hue-primary), var(--saturation-base), var(--lightness-base));
+  --color-accent: hsl(var(--hue-primary), 70%, 65%);
+  --color-text: hsl(0, 0%, 95%);
+  --color-subtext: hsl(var(--hue-primary), 10%, 60%);
+  --color-muted: hsl(var(--hue-primary), 10%, 25%); 
+
+  /* 休憩セッション（break） */
+  --break-saturation: 10%;
+  --break-lightness: 40%;
+  --color-bg-break: hsl(var(--hue-primary), var(--break-saturation), var(--break-lightness));
+  --color-accent-break: hsl(var(--hue-primary), 40%, 70%);
+  --color-text-break: hsl(0, 0%, 90%);
+
+  /* 長めの休憩（longbreak） */
+  --longbreak-saturation: 8%;
+  --longbreak-lightness: 50%;
+  --color-bg-longbreak: hsl(var(--hue-primary), var(--longbreak-saturation), var(--longbreak-lightness));
+  --color-accent-longbreak: hsl(var(--hue-primary), 30%, 75%);
+  --color-text-longbreak: hsl(0, 0%, 85%);
 }
 
 body {
   font-family: 'Segoe UI', sans-serif;
   text-align: center;
   padding: 50px;
-  background-color: #f5f5f5;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+body.session-break {
+  background-color: var(--color-bg-break);
+  color: var(--color-text-break);
+}
+
+body.session-longbreak {
+  background-color: var(--color-bg-longbreak);
+  color: var(--color-text-longbreak);
 }
 
 #sessionStatus {
@@ -18,13 +55,14 @@ body {
   /* 1行分の高さを確保 */
   font-size: var(--font-neutral);
   margin-bottom: 12px;
+  color: var(--color-subtext);
 }
 
 #timerContainer {
   font-size: 64px;
   font-weight: bold;
   margin-bottom: 30px;
-  color: #333;
+  color: var(--color-text);
 }
 
 #buttonContainer {
@@ -42,7 +80,8 @@ button {
   min-width: 120px;
   min-height: 44px;
   margin: 5px;
-  background-color: #d4d4d4;
+  background-color: var(--color-muted);
+  color: var(--color-text);
   cursor: pointer;
   border-radius: var(--radius);
   border: none;
@@ -76,12 +115,16 @@ button {
   }
 }
 
+#popup {
+  border-radius: var(--radius);
+  background-color: var(--color-bg);
+}
 
 /* 20分ボタン：強調 */
 .highlight-btn {
   font-size: var(--font-main);
   margin: 20px;
-  background-color: #ff4d4d;
+  background-color: var(--color-accent);
   color: white;
   cursor: pointer;
   border-radius: var(--radius);
@@ -98,7 +141,9 @@ button {
 .neutral-btn {
   font-size: var(--font-main);
   margin: 20px;
-  background-color: #e0e0e0;
+  /* background-color: #e0e0e0; */
+  background-color: var(--color-bg);
+  color: var(--color-text);
   cursor: pointer;
   border-radius: var(--radius);
   transition: background-color 0.4s ease, transform 0.4s ease;
@@ -106,7 +151,7 @@ button {
 
 .neutral-btn:hover {
   transform: scale(1.02);
-  background-color: #d5d5d5;
+  /* background-color: #d5d5d5; */
 }
 
 button:disabled {
@@ -127,7 +172,8 @@ dialog {
   min-height: 200px;
   padding: 20px;
   font-size: var(--font-neutral);
-  background-color: #fff;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   border: var(--radius);
   border: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);

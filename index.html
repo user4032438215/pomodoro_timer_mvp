@@ -12,8 +12,7 @@
 
   <h1>POMODORO TIMER</h1>
 
-  <!-- <output id="sessionStatus">　</output>現在のセッションタイプを表示する場所 -->
-  <output id="sessionStatus"></output>
+  <output id="sessionStatus" aria-live="polite"></output> <!-- セッションの状態を表示する場所 aria-live="polite"は音声読み上げサポート -->
 
   <div id="timerContainer">00:00</div>
 
@@ -23,21 +22,13 @@
       <!-- <button id="miniSession" onclick="startTimer(300, 'mini')">とりあえず5分だけ頑張る</button> -->
       <button id="miniSession" onclick="startTimer(10, 'mini')">とりあえず5分だけ頑張る</button>
 
-
       <!-- <button onclick="startTimer(1500, 'full')">▶ 25分タイマー</button> -->
       <button onclick="startTimer(10, 'full')">▶ 25分タイマー</button>
 
-      <!-- 自動でカウントダウンする機能を実装したので不要になったボタン群 -->
-      <!-- <button onclick="startTimer(300, 'break')">☕ 5分休憩</button> -->
-      <!-- <button onclick="startTimer(900, 'longbreak')">🌿 15分休憩</button> -->
-
     </div>
 
-    <!-- <div class="controlButtons"> -->
-      <!-- <button onclick="pauseTimer()">⏸ STOP</button> -->
-      <!-- <button onclick="resumeTimer()">▶ 再スタート</button> -->
-      <button id="toggleTimer" class="control-btn" onclick="toggleTimer()">⏸</button>
-    <!-- </div> -->
+    <button id="toggleTimer" class="control-btn" onclick="toggleTimer()">⏸</button>
+
   </div>
 
 

@@ -30,7 +30,7 @@ function getCurrentSessionType() {
         displayText = "🚀 もうあと20分！";
         break;
       default:
-        displayText =  "";
+        displayText = "";
     }
   }
 
@@ -51,6 +51,7 @@ function prepareTimer(duration, type) { // タイマー開始時のUI制御関�
   showTime(); // タイマーの秒数・状態・UI表示初期化のため
   // getCurrentSessionType(); // 現在のセッションタイプをHTML上に表示する関数
   disablePrimaryButtons(); // 全てのプライマリーボタンを無効化する関数
+  applySessionClass(sessionType);
 }
 
 function beginCountdown() { // カウントダウンを開始する関数
@@ -62,7 +63,7 @@ function countDown() {
   seconds--;
   if (seconds >= 0) {
     showTime();
-  }  else {
+  } else {
     pauseTimer();
     handleSesstionEnd();
   }
@@ -87,10 +88,12 @@ function handleSesstionEnd() { // セッション終了時の共通処理
   console.log("workSessionCount:" + workSessionCount); // 挙動確認用
 }
 
+
 function handleBreak() { // 休憩セッションの共通処理
   if (sessionType === 'extended' || sessionType === 'full') {
     if (workSessionCount % 3 === 0 && workSessionCount !== 0) {
       // startTimer(900, 'longbreak');
+      
       startTimer(5, 'longbreak');
     } else {
       // startTimer(300, 'break');
@@ -99,7 +102,8 @@ function handleBreak() { // 休憩セッションの共通処理
   } else if (sessionType === 'break' || sessionType === 'longbreak') {
     // startTimer(1500, 'full');
     startTimer(10, 'full');
-  }
+  } 
+
   console.log("handleBreak:", sessionType, workSessionCount); // 挙動確認用
 }
 
@@ -108,8 +112,8 @@ function handleMiniSessionEnd() {
   if (sessionType === 'mini') {
     isMiniSessionCompleted = true; // フラグをtrueに設定
     showPopup();
-  }
-}
+  } 
+} 
 
 //ポップアップを表示する関数
 function showPopup() {
@@ -196,6 +200,18 @@ function addWorkIcon() {
   }
 }
 
+//sessionTypeに応じてUIを変更する関数
+function applySessionClass(sessionType) {
+  const body = document.body;
+  body.classList.remove('session-break', 'session-longbreak');
+
+  if (sessionType === 'break') {
+    body.classList.add('session-break');
+  } else if (sessionType === 'longbreak') {
+    body.classList.add('session-longbreak');
+  }
+}
+
 // 全てのプライマリーボタンを無効化する関数
 // document.querySelectorAll(".primary-btns button").forEach(btn => btn.disabled = true);
 function disablePrimaryButtons() {
@@ -211,5 +227,4 @@ function enablePrimaryButtons() {
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].disabled = false;
   }
-}
-
+} 
