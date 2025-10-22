@@ -14,7 +14,15 @@
 
   <output id="sessionStatus" aria-live="polite"></output> <!-- セッションの状態を表示する場所 aria-live="polite"は音声読み上げサポート -->
 
-  <div id="timerContainer">00:00</div>
+  <div class="circle-timer">
+    <div id="timerContainer" class="digital-time">00:00</div>
+    <svg class="progress-ring" width="200" height="200">
+      <circle class="ring-bg" r="90" cx="100" cy="100" />
+      <circle class="ring-fg" r="90" cx="100" cy="100" />
+    </svg>
+
+  </div>
+  <!-- <div id="timerContainer">00:00</div> -->
 
   <div id="buttonContainer">
     <div class="primary-btns">
@@ -28,6 +36,7 @@
     </div>
 
     <button id="toggleTimer" class="control-btn" onclick="toggleTimer()">⏸</button>
+
 
   </div>
 

@@ -14,7 +14,7 @@
   --color-accent: hsl(var(--hue-primary), 70%, 65%);
   --color-text: hsl(0, 0%, 95%);
   --color-subtext: hsl(var(--hue-primary), 10%, 60%);
-  --color-muted: hsl(var(--hue-primary), 10%, 25%); 
+  --color-muted: hsl(var(--hue-primary), 10%, 25%);
 
   /* 休憩セッション（break） */
   --break-saturation: 10%;
@@ -48,6 +48,45 @@ body.session-longbreak {
   background-color: var(--color-bg-longbreak);
   color: var(--color-text-longbreak);
 }
+
+/* タイマー表記に関するレイアウト */
+.circle-timer {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: auto;
+}
+
+.digital-time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--color-text);
+  z-index: 1;
+}
+
+.progress-ring {
+  transform: rotate(-90deg); /* 12時方向から開始 */
+}
+
+.ring-bg {
+  fill: none;
+  stroke: #444;
+  stroke-width: 10;
+}
+
+.ring-fg {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 10;
+  stroke-dasharray: 565.48; /* 2πr = 2π×90 */
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+}
+
 
 #sessionStatus {
   display: block;
@@ -93,10 +132,24 @@ button {
 }
 
 .control-btn {
-  font-size: var(--font-small);
-  padding: 8px 16px;
+  min-width: unset;
+  /* buttonのmin-width: 120px;を無効 */
+  min-height: unset;
+  /* 同上 */
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* padding: 8px 16px; */
+  padding: 0;
+  /* 余白をなくすことで形が崩れない */
   opacity: 0.6;
+  line-height: 1;
 }
+
 
 
 /* 20分を選択したくなるように注目を集めるホバーアニメーション */
