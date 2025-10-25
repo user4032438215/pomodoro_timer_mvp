@@ -1,9 +1,21 @@
+//--挙動管理系
+const isDevelopment = true;
+function log(tag, ...messages) {
+  if (isDevelopment) {
+    console.log(`[${tag}]`, ...messages);
+  }
+}
+
+
 //--状態管理
 let seconds = 0; // タイマーの秒数を格納する変数の初期化 
 let timerId = null; // タイマーIDを格納する変数の初期化
 let sessionType = ''; // 現在のセッションタイプを追跡する変数.. 'full', 'break', 'longbreak', 'mini', 'extended' のいずれか
 let workSessionCount = 0; // 作業セッションのカウント
 let isMiniSessionCompleted = false; // 5分セッションが終わったかどうかのフラグ
+
+const alertDelayMS = 50; //マジックナンバー回避 アラートを一瞬遅くすることでアナログUIとのタイミングを合わせる
+
 
 const sessionLabels = {
   full: "💼 作業中",
@@ -62,6 +74,8 @@ function startTimer(duration, type) { // onclick="startTimer(10, 'full')"の1500
   beginCountdown(); // カウントダウンを開始する関数
   // getCurrentSessionType(); // セッションタイプの表示を更新
   updateSessionLabel(); //セッション表示の共通処理
+
+  log("startTimer:", { duration, type });
 }
 
 // タイマー開始時のUI制御関数群
@@ -73,6 +87,8 @@ function prepareTimer(duration, type) {
   // disablePrimaryButtons(); // 全てのプライマリーボタンを無効化する関数
   togglePrimaryButtons(false); //タイマーの一時停止・再開を切り替える関数
   applySessionClass(sessionType);
+
+  log("prepareTimer:", { seconds, sessionType });
 }
 
 // カウントダウンを開始する関数
@@ -86,27 +102,69 @@ function countDown() {
   if (seconds >= 0) {
     showTime();
   } else {
+    clearInterval(timerId);
+    timerId = null;
     updateProgress(0, sessionType); // アナログ表記のラグ解消目的で呼び出し
-    pauseTimer();
+    // pauseTimer();
     handleSesstionEnd();
   }
+
+  log("countDown:", { seconds });
 }
+
+//
+// function countDown() {
+//   if (seconds <= 0) {
+//     clearInterval(timerId);
+//     timerId = null;
+//     updateProgress(0, sessionType); // アナログ表記のラグ解消目的で呼び出し
+//     // pauseTimer();
+//     handleSesstionEnd();
+//   }
+
+//   seconds--;
+//   showTime();
+//   log("countDown:", { seconds });
+// }
+
+//
+// function countDown() {
+//   // 次の残秒を計算
+//   const next = seconds - 1;
+//   if (next <= 0) {
+//     seconds = 0;
+//     clearInterval(timerId);
+//     timerId = null;
+//     refreshUI();                // 表示を先に確定
+//     handleSesstionEnd();        // 一度だけ終了処理
+//     return;
+//   }
+
+//   seconds = next;
+//   refreshUI();                  // showTime + updateProgress 等
+//   log("countDown:", { seconds });
+// }
+
+
 
 // タイマーをストップする関数
 function pauseTimer() {
   clearInterval(timerId); //
   timerId = null; // タイマーIDをリセット
-  // getCurrentSessionType(); // セッションタイプの表示を更新
+  updateProgress(seconds, sessionType); //保険でアナログ表記の時間経過を描画関数を呼び出す。無駄なら後からDRYする
   updateSessionLabel(); //セッション表示の共通処理
+  log("pauseTimer:", { seconds, sessionType });
 }
 
 // タイマーを再開する関数 
 function resumeTimer() {
   if (seconds > 0 && !timerId) {
     timerId = setInterval(countDown, 1000);
-    // getCurrentSessionType(); // セッションタイプの表示を更新
     updateSessionLabel(); //セッション表示の共通処理
+    log("resumeTimer:", { seconds, sessionType });
   }
+
+  log("pauseTimer:", { seconds, sessionType });
 }
 
 
@@ -119,7 +177,6 @@ function showTime() {
   const formatted = `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   document.getElementById("timerContainer").textContent = formatted;
   updateProgress(seconds, sessionType); //アナログ表記の時間経過を描画
-  console.log("残り秒数:", seconds); // 挙動確認用
 }
 
 //セッション表示の共通処理
@@ -149,12 +206,14 @@ function updateToggleBtn() {
 
 // タイマーの一時停止・再開を切り替える関数
 function toggleTimer() {
-  timerId ? pauseTimer() : resumeTimer(); //
-  // updateProgress(seconds, sessionType); // 
-  // // getCurrentSessionType(); // セッションタイプの表示を更新
-  // updateSessionLabel(); //セッション表示の共通処理
-  // updateToggleBtn(); // トグルボタンの表示を更新
-  refreshUI(); //UI更新をまとめた関数群
+  if (seconds <= 0) {
+    log("toggleTimer:", "タイマー終了後の操作は無効");
+    return;
+  }
+
+  timerId ? pauseTimer() : resumeTimer();
+  refreshUI(); //↑UI更新関数
+  log("toggleTimer:", timerId ? "pause" : "resume");
 }
 
 //UI更新をまとめた関数群
@@ -175,10 +234,10 @@ function handleSesstionEnd() {
   setTimeout(() => {
     alert("タイマー終了！");
     proceedToNextSession();
-  }, 50);
+  }, alertDelayMS);
 
-  console.log("sessionType:" + sessionType); // 挙動確認用
-  
+  log("handleSessionEnd:", sessionType);
+  log("proceedToNextSession:", { sessionType, workSessionCount });
 }
 
 
@@ -192,7 +251,9 @@ function proceedToNextSession() {
   }
   handleBreak(); // 休憩セッションの共通処理
   closeMiniSession(); //miniSesionを非表示にする関数
-  console.log("workSessionCount:" + workSessionCount); // 挙動確認用
+
+  log("handleSessionEnd:", sessionType);
+  log("proceedToNextSession:", { sessionType, workSessionCount });
 }
 
 // 休憩セッションの共通処理
@@ -211,7 +272,6 @@ function handleBreak() {
     startTimer(10, 'full');
   }
 
-  console.log("handleBreak:", sessionType, workSessionCount); // 挙動確認用
 }
 
 //🔥アイコンを追加していく関数
@@ -223,7 +283,7 @@ function addWorkIcon() {
     icon.textContent = "🔥"; // アイコンを設定
     icon.classList.add("work-icon"); // クラスを追加（必要に応じてスタイルを適用するため）
     container.appendChild(icon); // コンテナに追加
-    console.log("🔥"); // 挙動確認用
+    log("🔥");
 
     // 3回の作業セッションごとに改行を追加
     if ((i + 1) % 3 === 0) container.appendChild(document.createElement("br"));
@@ -302,48 +362,3 @@ function closeMiniSession() {
     element.style.display = "none";
   }
 }
-
-
-
-//--いらなくなった関数たち
-// オブジェクトで管理したので不要
-//セッションタイプに応じて↑のために時間を返す関数←
-// function getTotalSeconds(sessionType) {
-//   switch (sessionType) {
-//     case 'full':
-//       // return 1500; // 25分
-//       return 10;
-//     case 'break':
-//       // return 300;  // 5分
-//       return 5;
-//     case 'longbreak':
-//       // return 900;  // 15分
-//       return 5;
-//     case 'mini':
-//       // return 300;  // 5分
-//       return 10;
-//     case 'extended':
-//       // return 1200; // 20分
-//       return 10;
-//     default:
-//       return 0;
-//   }
-// }
-
-//togglePrimaryButtons(enable) に統合したので不要
-// // 全てのプライマリーボタンを無効化する関数
-// // document.querySelectorAll(".primary-btns button").forEach(btn => btn.disabled = true);
-// function disablePrimaryButtons() {
-//   let buttons = document.querySelectorAll(".primary-btns button");
-//   for (let i = 0; i < buttons.length; i++) {
-//     buttons[i].disabled = true;
-//   }
-// }
-
-// // 全てのプライマリーボタンを有効化する関数
-// function enablePrimaryButtons() {
-//   let buttons = document.querySelectorAll(".primary-btns button");
-//   for (let i = 0; i < buttons.length; i++) {
-//     buttons[i].disabled = false;
-//   }
-// } 
