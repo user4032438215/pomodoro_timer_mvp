@@ -150,19 +150,6 @@ function updateSessionLabel() {
   status.textContent = timerId ? sessionLabels[sessionType] || "" : "⏸ 一時停止中";
 }
 
-//primary-btnsの制御←☆closePrimaryBtnsに置き換えるため不要に
-//下記の2つの関数を統合→DRY、保守性、可読性UP
-// function togglePrimaryButtons(enable) {
-//   document.querySelectorAll(".primary-btns button").forEach(btn => {
-//     btn.disabled = !enable;
-//   });
-//   // for文で書いた場合
-//   // let buttons = document.querySelectorAll(".primary-btns button");
-//   // for (let i = 0; i < buttons.length; i++) {
-//   //   buttons[i].disabled = true;
-//   // }
-// }
-
 // タイマーの一時停止・再開のトグルボタンUI制御関数
 function updateToggleBtn() {
   const toggleBtn = document.getElementById("toggle-timer");
@@ -181,10 +168,6 @@ function toggleTimer() {
   log("toggleTimer:", timerId ? "pause" : "resume");
 }
 
-
-
-
-
 //UI更新をまとめた関数群
 function refreshUI() {
   updateProgress(seconds, sessionType); //← ラグいので追加：即時描画更新
@@ -195,7 +178,6 @@ function refreshUI() {
 //--セッション処理
 // セッション終了時の共通処理
 function handleSesstionEnd() {
-  // togglePrimaryButtons(true); //誤操作防止機能☆closePrimaryBtnsに置き換えるため不要に
   updateProgress(0, sessionType); //アナログ表記の時間経過を描画
 
   // alert("タイマー終了！");
@@ -323,14 +305,6 @@ function handlePopupEnd() {
   alert("おつかれさまでした！");
 }
 
-//miniSesionを非表示にする関数☆closePrimaryBtnsに置き換えるため不要に
-// function closeMiniSession() {
-//   const element = document.getElementById("mini-session");
-//   if (element) {
-//     element.style.display = "none";
-//   }
-// }
-
 //タイマー開始後、停止再開のトグルボタン以外非表示にする関数。上記の関数を加工再利用
 function closePrimaryBtns() {
   const element = document.getElementById("primary-btns");
@@ -339,9 +313,8 @@ function closePrimaryBtns() {
   }
 }
 
-
 //↑の対になる関数：記述理由 可読性や保守性、一貫性、保守性や拡張性の向上のためにあったほうがいいらしい。
-function openPrimaryBtns(){
+function openPrimaryBtns() {
   const element = document.getElementById("primary-btns");
   if (element) {
     element.style.display = "flex";
