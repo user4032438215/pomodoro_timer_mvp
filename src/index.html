@@ -12,30 +12,28 @@
 
   <h1>POMODORO TIMER</h1>
 
-  <output id="sessionStatus" aria-live="polite"></output> <!-- セッションの状態を表示する場所 aria-live="polite"は音声読み上げサポート -->
+  <output id="session-status" aria-live="polite"></output> <!-- セッションの状態を表示する場所 aria-live="polite"は音声読み上げサポート -->
 
   <div class="circle-timer">
-    <div id="timerContainer" class="digital-time">00:00</div>
+    <div id="timer-container" class="digital-time">00:00</div>
     <svg class="progress-ring" width="200" height="200">
       <circle class="ring-bg" r="90" cx="100" cy="100" />
       <circle class="ring-fg" r="90" cx="100" cy="100" />
     </svg>
-
   </div>
-  <!-- <div id="timerContainer">00:00</div> -->
 
-  <div id="buttonContainer">
-    <div class="primary-btns">
+  <div id="button-container">
+    <div id="primary-btns" class="primary-btns">
 
-      <!-- <button id="miniSession" onclick="startTimer(300, 'mini')">とりあえず5分だけ頑張る</button> -->
-      <button id="miniSession" onclick="startTimer(10, 'mini')">とりあえず5分だけ頑張る</button>
+      <!-- <button id="mini-session" onclick="startTimer(300, 'mini')">とりあえず5分だけ頑張る</button> -->
+      <button id="mini-session" onclick="startTimer(10, 'mini')">とりあえず5分だけ頑張る</button>
 
       <!-- <button onclick="startTimer(1500, 'full')">▶ 25分タイマー</button> -->
       <button onclick="startTimer(10, 'full')">▶ 25分タイマー</button>
 
     </div>
 
-    <button id="toggleTimer" class="control-btn" onclick="toggleTimer()">⏸</button>
+    <button id="toggle-timer" class="control-btn" onclick="toggleTimer()">⏸</button>
 
 
   </div>
@@ -54,7 +52,7 @@
     </div>
   </dialog>
 
-  <div id="workIcons"></div> <!-- 🔥を表示する場所 -->
+  <div id="work-icons"></div> <!-- 🔥を表示する場所 -->
 
   <script src="js/timer.js"></script>
 </body>

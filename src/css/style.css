@@ -79,7 +79,7 @@ body.session-longbreak {
 
     /* 2πr = 2π×90 */
   }
-#sessionStatus {
+#session-status {
     color: var(--color-subtext);
     display: block;
     font-size: var(--font-neutral);
@@ -88,13 +88,13 @@ body.session-longbreak {
 
     /* 1行分の高さを確保 */
   }
-#timerContainer {
+#timer-container {
     color: var(--color-text);
     font-size: 64px;
     font-weight: bold;
     margin-bottom: 30px;
   }
-#buttonContainer {
+#button-container {
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -219,7 +219,7 @@ dialog::backdrop {
   }
 /* レスポンシブ対応 */
 @media (max-width: 480px) {
-  #buttonContainer {
+  #button-container {
       gap: 8px;
       padding: 8px;
     }
@@ -227,7 +227,7 @@ dialog::backdrop {
       font-size: var(--font-neutral);
       min-width: 100%;
     }
-  #timerContainer {
+  #timer-container {
       font-size: 48px;
     }
   dialog {
@@ -248,7 +248,7 @@ dialog::backdrop {
       margin: 0;
       width: 100%;
     }
-  #sessionStatus {
+  #session-status {
       font-weight: bold;
       text-align: center;
     }

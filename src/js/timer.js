@@ -16,7 +16,6 @@ let isMiniSessionCompleted = false; // 5分セッションが終わったかど�
 
 const alertDelayMS = 50; //マジックナンバー回避 アラートを一瞬遅くすることでアナログUIとのタイミングを合わせる
 
-
 const sessionLabels = {
   full: "💼 作業中",
   break: "☕ 休憩中",
@@ -33,38 +32,6 @@ const sessionDurations = {
   extended: 10 //1200
 };
 
-//// 現在のセッションタイプをHTML上に表示する関数←配列に置き換え
-// function getCurrentSessionType() {
-//   const status = document.getElementById("sessionStatus");
-//   let displayText = "";
-
-//   if (!timerId) {
-//     displayText = "⏸ 一時停止中";
-//   } else {
-//     switch (sessionType) {
-//       case 'full':
-//         displayText = "💼 作業中";
-//         break;
-//       case 'break':
-//         displayText = "☕ 休憩中";
-//         break;
-//       case 'longbreak':
-//         displayText = "🌿 長めの休憩中";
-//         break;
-//       case 'mini':
-//         displayText = "🕔 5分だけ頑張る！";
-//         break;
-//       case 'extended':
-//         displayText = "🚀 もうあと20分！";
-//         break;
-//       default:
-//         displayText = "";
-//     }
-//   }
-
-//   status.textContent = displayText;
-// }
-
 
 
 //--タイマー制御
@@ -72,9 +39,8 @@ const sessionDurations = {
 function startTimer(duration, type) { // onclick="startTimer(10, 'full')"の1500がdurationに入る。'full'がtypeに入る
   prepareTimer(duration, type); // タイマー開始時のUI制御関数群
   beginCountdown(); // カウントダウンを開始する関数
-  // getCurrentSessionType(); // セッションタイプの表示を更新
   updateSessionLabel(); //セッション表示の共通処理
-
+  closePrimaryBtns();
   log("startTimer:", { duration, type });
 }
 
@@ -84,8 +50,7 @@ function prepareTimer(duration, type) {
   seconds = duration; // 25分、5分、15分の秒数を代入
   sessionType = type; // 現在のセッションタイプを設定
   showTime(); // タイマーの秒数・状態・UI表示初期化のため
-  // disablePrimaryButtons(); // 全てのプライマリーボタンを無効化する関数
-  togglePrimaryButtons(false); //タイマーの一時停止・再開を切り替える関数
+  // togglePrimaryButtons(false); //タイマーの一時停止・再開を切り替える関数☆closePrimaryBtnsに置き換えるため不要に
   applySessionClass(sessionType);
 
   log("prepareTimer:", { seconds, sessionType });
@@ -146,7 +111,7 @@ function countDown() {
 // }
 
 
-
+//--
 // タイマーをストップする関数
 function pauseTimer() {
   clearInterval(timerId); //
@@ -175,36 +140,36 @@ function showTime() {
   const minutes = Math.floor(seconds / 60);
   const secs = seconds % 60;
   const formatted = `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-  document.getElementById("timerContainer").textContent = formatted;
+  document.getElementById("timer-container").textContent = formatted;
   updateProgress(seconds, sessionType); //アナログ表記の時間経過を描画
 }
 
 //セッション表示の共通処理
 function updateSessionLabel() {
-  const status = document.getElementById("sessionStatus");
+  const status = document.getElementById("session-status");
   status.textContent = timerId ? sessionLabels[sessionType] || "" : "⏸ 一時停止中";
 }
 
-//primary-btnsの制御
+//primary-btnsの制御←☆closePrimaryBtnsに置き換えるため不要に
 //下記の2つの関数を統合→DRY、保守性、可読性UP
-function togglePrimaryButtons(enable) {
-  document.querySelectorAll(".primary-btns button").forEach(btn => {
-    btn.disabled = !enable;
-  });
-  // for文で書いた場合
-  // let buttons = document.querySelectorAll(".primary-btns button");
-  // for (let i = 0; i < buttons.length; i++) {
-  //   buttons[i].disabled = true;
-  // }
-}
+// function togglePrimaryButtons(enable) {
+//   document.querySelectorAll(".primary-btns button").forEach(btn => {
+//     btn.disabled = !enable;
+//   });
+//   // for文で書いた場合
+//   // let buttons = document.querySelectorAll(".primary-btns button");
+//   // for (let i = 0; i < buttons.length; i++) {
+//   //   buttons[i].disabled = true;
+//   // }
+// }
 
 // タイマーの一時停止・再開のトグルボタンUI制御関数
 function updateToggleBtn() {
-  const toggleBtn = document.getElementById("toggleTimer");
+  const toggleBtn = document.getElementById("toggle-timer");
   toggleBtn.textContent = timerId ? "⏸" : "▶";
 }
 
-// タイマーの一時停止・再開を切り替える関数
+// タイマーの一時停止・再開を切り替える関数←停止再開のトグルボタン以外非表示にする仕様に変更
 function toggleTimer() {
   if (seconds <= 0) {
     log("toggleTimer:", "タイマー終了後の操作は無効");
@@ -216,6 +181,10 @@ function toggleTimer() {
   log("toggleTimer:", timerId ? "pause" : "resume");
 }
 
+
+
+
+
 //UI更新をまとめた関数群
 function refreshUI() {
   updateProgress(seconds, sessionType); //← ラグいので追加：即時描画更新
@@ -226,7 +195,7 @@ function refreshUI() {
 //--セッション処理
 // セッション終了時の共通処理
 function handleSesstionEnd() {
-  togglePrimaryButtons(true); //
+  // togglePrimaryButtons(true); //誤操作防止機能☆closePrimaryBtnsに置き換えるため不要に
   updateProgress(0, sessionType); //アナログ表記の時間経過を描画
 
   // alert("タイマー終了！");
@@ -241,7 +210,7 @@ function handleSesstionEnd() {
 }
 
 
-//
+//次のセッションへの準備するための関数群
 function proceedToNextSession() {
   if (sessionType === 'mini') {
     handleMiniSessionEnd(); // 5分ミニセッションが終了した場合にポップアップを表示する関数
@@ -250,8 +219,7 @@ function proceedToNextSession() {
     addWorkIcon();
   }
   handleBreak(); // 休憩セッションの共通処理
-  closeMiniSession(); //miniSesionを非表示にする関数
-
+  // closeMiniSession(); //miniSesionを非表示にする関数☆仕様変更によりいらなくなる
   log("handleSessionEnd:", sessionType);
   log("proceedToNextSession:", { sessionType, workSessionCount });
 }
@@ -276,7 +244,7 @@ function handleBreak() {
 
 //🔥アイコンを追加していく関数
 function addWorkIcon() {
-  const container = document.getElementById("workIcons");
+  const container = document.getElementById("work-icons");
   container.textContent = ""; // 一応中身をカラにしておく
   for (let i = 0; i < workSessionCount; i++) {
     const icon = document.createElement("span"); // span要素を作成
@@ -355,10 +323,27 @@ function handlePopupEnd() {
   alert("おつかれさまでした！");
 }
 
-//miniSesionを非表示にする関数
-function closeMiniSession() {
-  const element = document.getElementById("miniSession");
+//miniSesionを非表示にする関数☆closePrimaryBtnsに置き換えるため不要に
+// function closeMiniSession() {
+//   const element = document.getElementById("mini-session");
+//   if (element) {
+//     element.style.display = "none";
+//   }
+// }
+
+//タイマー開始後、停止再開のトグルボタン以外非表示にする関数。上記の関数を加工再利用
+function closePrimaryBtns() {
+  const element = document.getElementById("primary-btns");
   if (element) {
     element.style.display = "none";
   }
 }
+
+
+//↑の対になる関数：記述理由 可読性や保守性、一貫性、保守性や拡張性の向上のためにあったほうがいいらしい。
+function openPrimaryBtns(){
+  const element = document.getElementById("primary-btns");
+  if (element) {
+    element.style.display = "flex";
+  }
+} 
